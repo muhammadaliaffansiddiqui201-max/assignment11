@@ -1,57 +1,60 @@
-let tasks = [
-   
-];
-
-
 function addTask() {
-    let input = document.getElementById("taskInput");
-    let task = input.value.trim();
+  var taskInput = document.getElementById("taskInput");
+  var task = taskInput.value;
 
-    if (task === "") {
-        
-        return;
-    }
+  if (task === "") return;
 
-    tasks.push(task);
-    input.value = "";
-    showTasks();
+  database.ref("tasks").push({
+    task: task
+  });
+
+  taskInput.value = "";
 }
 
-function showTasks() {
-    let list = document.getElementById("taskList");
-    list.innerHTML = "";
+database.ref("tasks").on("child_added", function(snapshot) {
+  var data = snapshot.val();
+  var key = snapshot.key;
 
-    for (let i = 0; i < tasks.length; i++) {
-        let li = document.createElement("li");
+  var li = document.createElement("li");
+  li.setAttribute("id", key);
 
-        li.innerHTML = `
-            <span>${tasks[i]}</span>
-            <div class="task-buttons">
-                <button onclick="editTask(${i})">Edit</button>
-                <button onclick="deleteTask(${i})">Delete</button>
-            </div>
-        `;
+  var span = document.createElement("span");
+  span.innerText = data.task;
 
-        list.appendChild(li);
-    }
+  var editBtn = document.createElement("button");
+  editBtn.innerText = "Edit";
+  editBtn.onclick = function () {
+    editTask(key, data.task);
+  };
+
+  var delBtn = document.createElement("button");
+  delBtn.innerText = "Delete";
+  delBtn.onclick = function () {
+    deleteTask(key);
+  };
+
+  li.appendChild(span);
+  li.appendChild(editBtn);
+  li.appendChild(delBtn);
+
+  document.getElementById("taskList").appendChild(li);
+});
+
+// 🔵 EDIT TASK
+function editTask(key, oldTask) {
+  var newTask = prompt("Edit your task", oldTask);
+
+  if (newTask === null || newTask === "") return;
+
+  database.ref("tasks/" + key).update({
+    task: newTask
+  });
+
+  document.querySelector("#" + key + " span").innerText = newTask;
 }
 
-function editTask(index) {
-    let newTask = prompt("Edit task", tasks[index]);
-
-    if (newTask === null || newTask.trim() === "") {
-        alert("Invalid task");
-        return;
-    }
-
-    tasks[index] = newTask;
-    showTasks();
+// 🔴 DELETE TASK
+function deleteTask(key) {
+  database.ref("tasks/" + key).remove();
+  document.getElementById(key).remove();
 }
-
-function deleteTask(index) {
-    tasks.splice(index, 1);
-    showTasks();
-}
-
-
-showTasks();
