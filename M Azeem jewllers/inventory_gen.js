@@ -294,12 +294,79 @@ function getComputedData(category, name) {
     };
 }
 
-const products = sourceProducts.map(([category, name, imageUrl]) => {
+const localProducts = sourceProducts.map(([category, name, imageUrl]) => {
     const computed = getComputedData(category, name);
     return [category, name, computed.weight, computed.price, imageUrl];
 });
 
 const gridContainer = document.querySelector('.grid-container');
-if (gridContainer) {
-    gridContainer.innerHTML = products.map((p) => generateProductHTML(...p)).join('');
-}
+const renderProducts = (productsList) => {
+    if (!gridContainer) return;
+    gridContainer.innerHTML = productsList.map((p) => generateProductHTML(...p)).join('');
+};
+
+const normalizeDbProduct = (raw) => {
+    if (!raw) return null;
+
+    const categoryRaw = raw.category || raw.type || '';
+    const name = raw.name || raw.title || '';
+    if (!categoryRaw || !name) return null;
+
+    const category = categoryRaw.toLowerCase();
+    let weightText = raw.weight;
+    let priceText = raw.price;
+
+    if (typeof weightText === 'number') {
+        weightText = formatWeight(weightText);
+    }
+    if (typeof priceText === 'number') {
+        priceText = formatPKR(priceText);
+    }
+
+    if (!weightText || !priceText) {
+        const computed = getComputedData(category, name);
+        if (!weightText) weightText = computed.weight;
+        if (!priceText) priceText = computed.price;
+    }
+
+    const imageUrl = raw.imageUrl || raw.image || imageLinks[name];
+    return [category, name, weightText, priceText, imageUrl];
+};
+
+const getDbProductsArray = (data) => {
+    if (!data) return [];
+    if (Array.isArray(data)) return data;
+    return Object.values(data);
+};
+
+const initRealtimeProducts = () => {
+    if (!gridContainer) return;
+    if (!window.firebaseDb || typeof window.firebaseDb.ref !== 'function') {
+        renderProducts(localProducts);
+        return;
+    }
+
+    try {
+        const productsRef = window.firebaseDb.ref('products');
+        productsRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            const rows = getDbProductsArray(data)
+                .map(normalizeDbProduct)
+                .filter(Boolean);
+
+            if (rows.length > 0) {
+                renderProducts(rows);
+            } else {
+                renderProducts(localProducts);
+            }
+        }, (error) => {
+            console.warn('Realtime products error:', error);
+            renderProducts(localProducts);
+        });
+    } catch (err) {
+        console.warn('Realtime products init failed:', err);
+        renderProducts(localProducts);
+    }
+};
+
+initRealtimeProducts();

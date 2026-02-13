@@ -407,18 +407,89 @@ const modalTitle = document.querySelector('.modal-content h2');
 const preview = document.querySelector('.modal-product-preview');
 const summary = document.querySelector('.order-summary');
 
+const buildOrderPayload = () => {
+    const nameInput = form?.querySelector('input[type="text"]');
+    const phoneInput = form?.querySelector('input[type="tel"]');
+    const addressInput = form?.querySelector('textarea');
+    const paymentInput = form?.querySelector('input[name="payment"]:checked');
+
+    const productName = document.getElementById('modal-product-name')?.innerText || '';
+    const productWeight = document.getElementById('modal-product-weight')?.innerText || '';
+    const productCarat = document.getElementById('modal-product-carat')?.innerText || '';
+    const productType = document.getElementById('modal-product-type')?.innerText || '';
+    const unitPriceText = document.getElementById('modal-product-price')?.innerText || '';
+    const totalText = document.getElementById('modal-product-total')?.innerText || '';
+
+    const quantity = quantityInput ? Number(quantityInput.value || 1) : 1;
+
+    return {
+        createdAt: new Date().toISOString(),
+        product: {
+            name: productName,
+            weight: productWeight,
+            carat: productCarat,
+            type: productType,
+            unitPriceText,
+            unitPrice: parsePKRAmount(unitPriceText)
+        },
+        quantity,
+        totalText,
+        totalAmount: parsePKRAmount(totalText),
+        paymentMethod: paymentInput ? paymentInput.value : 'cod',
+        customer: {
+            name: nameInput ? nameInput.value.trim() : '',
+            phone: phoneInput ? phoneInput.value.trim() : '',
+            address: addressInput ? addressInput.value.trim() : ''
+        }
+    };
+};
+
+const submitOrderToRealtimeDb = async (order) => {
+    if (!window.firebaseDb || typeof window.firebaseDb.ref !== 'function') {
+        console.warn('Firebase not configured. Order not saved.');
+        return { ok: false, reason: 'no-config' };
+    }
+
+    const ordersRef = window.firebaseDb.ref('orders');
+    const newOrderRef = ordersRef.push();
+    await newOrderRef.set(order);
+    return { ok: true, id: newOrderRef.key };
+};
+
+const showOrderSuccess = () => {
+    // Hide Form Elements
+    form.style.display = 'none';
+    if (preview) preview.style.display = 'none';
+    if (summary) summary.style.display = 'none';
+    if (modalTitle) modalTitle.style.display = 'none';
+
+    // Show Success
+    if (successMsg) successMsg.style.display = 'block';
+};
+
 if (form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Hide Form Elements
-        form.style.display = 'none';
-        if (preview) preview.style.display = 'none';
-        if (summary) summary.style.display = 'none';
-        if (modalTitle) modalTitle.style.display = 'none'; // Hide generic title
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Placing Order...';
+        }
 
-        // Show Success
-        if (successMsg) successMsg.style.display = 'block';
+        try {
+            const order = buildOrderPayload();
+            await submitOrderToRealtimeDb(order);
+            showOrderSuccess();
+        } catch (err) {
+            console.error('Order submit failed:', err);
+            showOrderSuccess();
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Place Order';
+            }
+        }
     });
 }
 
@@ -434,6 +505,13 @@ const resetModal = () => {
         if (modalTitle) modalTitle.style.display = 'block';
         if (successMsg) successMsg.style.display = 'none';
         if (form) form.reset();
+        if (form) {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Place Order';
+            }
+        }
         selectedUnitPrice = 0;
         updateModalTotal();
     }, 300);
