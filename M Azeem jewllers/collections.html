@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Collections | M Azeem Jewellers</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="index.html#home" class="logo">M Azeem <span>Jewellers</span></a>
+        <ul class="nav-links">
+            <li><a href="index.html#home" class="nav-item">Home</a></li>
+            <li class="dropdown-trigger">
+                <a href="#" class="nav-item active">Collections <span class="arrow">▼</span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-filter="all">All</a></li>
+                    <li><a href="#" data-filter="gold">Gold</a></li>
+                    <li><a href="#" data-filter="silver">Silver</a></li>
+                    <li><a href="#" data-filter="artificial">Artificial</a></li>
+                    <li><a href="#" data-filter="diamond">Diamond</a></li>
+                    <li><a href="#" data-filter="premium">Premium</a></li>
+                    <li><a href="#" data-filter="mens">Men's Collection</a></li>
+                </ul>
+            </li>
+            <li><a href="index.html#about" class="nav-item">About</a></li>
+            <li><a href="index.html#contact" class="nav-item">Contact</a></li>
+        </ul>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
+
+    <!-- Gold Rate Ticker -->
+    <div class="gold-rate-ticker">
+        <div class="ticker-content">
+            <span>Today's Gold Rate:</span>
+            <span class="rate-item" id="rate-24k">24K Gold: Rs. 518,500 / Tola</span>
+            <span class="separator">•</span>
+            <span class="rate-item" id="rate-22k">22K Gold: Rs. 475,000 / Tola</span>
+            <span class="separator">•</span>
+            <span class="rate-item" id="rate-21k">21K Gold: Rs. 453,000 / Tola</span>
+            <span class="separator">•</span>
+            <span class="rate-item" id="rate-18k">18K Gold: Rs. 388,800 / Tola</span>
+            <span class="separator">•</span>
+            <span class="rate-item" id="silver">Silver: Rs. 12,000 / Tola</span>
+            <span class="separator">|</span>
+            <span class="update-time">Last Update: <span id="rate-time">12:00 PM</span></span>
+        </div>
+    </div>
+
+    <!-- Collections Section -->
+    <section id="collections" class="section" style="padding-top: 8rem;">
+        <div class="section-header">
+            <h2>Our Collections</h2>
+            <div class="underline"></div>
+        </div>
+        <!-- Search Bar -->
+        <div class="search-wrapper">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search for rings, necklaces, bangles..." aria-label="Search products">
+                <span id="search-results" class="search-results-count" style="display: none;"></span>
+            </div>
+        </div>
+        <div class="grid-container"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section about">
+                <h3>M. Azeem <span>Jewellers</span></h3>
+                <p>Authenticity and elegance since generations. Specialists in Custom Gold, Diamond, and Men's Jewellery.</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/aahmed_jeweller?igsh=bHo1Zzg0NXByNnh5" aria-label="Instagram">IG</a>
+                    <a href="#" aria-label="WhatsApp">WA</a>
+                </div>
+            </div>
+            <div class="footer-section links">
+                <h4>Discover</h4>
+                <ul>
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="collections.html">Collections</a></li>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact-info">
+                <h4>Visit Boutique</h4>
+                <p>Shop #123, Gold Market, Your City</p>
+                <p>Open: 11:00 AM - 10:00 PM</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 M. Azeem Jewellers. Crafted with Excellence. | <a href="#">Terms</a></p>
+        </div>
+    </footer>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-modal" aria-label="Close modal">&times;</span>
+            <h2 id="modal-title">Confirm Your Order</h2>
+            <div class="modal-product-preview">
+                <img id="modal-product-image" src="" alt="Selected Product">
+            </div>
+            <div class="order-summary">
+                <p><strong>Product:</strong> <span id="modal-product-name">Product Name</span></p>
+                <p><strong>Weight:</strong> <span id="modal-product-weight">0.0 Grams</span></p>
+                <p><strong>Carat:</strong> <span id="modal-product-carat">N/A</span></p>
+                <p><strong>Type:</strong> <span id="modal-product-type">N/A</span></p>
+                <p><strong>Price:</strong> <span id="modal-product-price">Rs. 0</span></p>
+                <p><strong>Total Amount:</strong> <span id="modal-product-total">Rs. 0</span></p>
+            </div>
+            <form class="payment-form">
+                <div class="quantity-selector">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+                </div>
+                <h3>Select Payment Method</h3>
+                <label class="payment-option">
+                    <input type="radio" name="payment" value="cod" checked> Cash on Delivery (COD)
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment" value="bank"> Bank Transfer (Meezan/HBL)
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment" value="jazzcash"> JazzCash / EasyPaisa
+                </label>
+                <div class="customer-details">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="tel" placeholder="Phone Number" required>
+                    <textarea placeholder="Delivery Address" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Place Order</button>
+            </form>
+            <div class="order-success" style="display: none;">
+                <div class="success-icon">✓</div>
+                <h2>Thank You!</h2>
+                <p>Your order has been placed successfully.</p>
+                <p class="sub-text">We will contact you shortly to confirm details.</p>
+                <button class="btn-primary close-success-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Realtime Database (Compat SDK) -->
+    <script>
+        // TODO: Replace with your Firebase project config
+        window.FIREBASE_CONFIG = {
+            apiKey: "AIzaSyBpMUP6E3S0Sf2_4KvGfOUQcmMb8IXi4y4",
+            authDomain: "azeemjewller.firebaseapp.com",
+            databaseURL: "https://azeemjewller-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "azeemjewller",
+            storageBucket: "azeemjewller.firebasestorage.app",
+            messagingSenderId: "623538478652",
+            appId: "1:623538478652:web:1244d9b4e57c3a3ebdad39"
+        };
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
+    <script src="firebase-init.js"></script>
+
+    <!-- JavaScript -->
+    <script src="inventory_gen.js"></script>
+    <script src="web.js?v=4"></script>
+</body>
+</html>

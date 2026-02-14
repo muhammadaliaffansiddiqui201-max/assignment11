@@ -1,0 +1,76 @@
+body{
+   background-color: rgba(255, 230, 0, 0.678);
+   color: rgb(0, 0, 0);
+   font-family:  Arial, sans-serif;
+}
+.hd{
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+   color: rgba(41, 141, 255, 0.938);
+position: fixed;
+z-index: 1000;
+ top: 0;
+ left: 0;
+ width: 100%;
+ background-color: rgb(255, 209, 2);
+}
+.hd:hover{
+color: rgb(255, 255, 255);
+}
+.intro{
+    color: rgb(255, 209, 2);
+    background-image: url(https://images.ctfassets.net/piwi0eufbb2g/4k3m7B1tegAEtCfQ3XJP13/eea1eae6fcaf7099e20cf7f41d5201b8/What_is_a_Callback_Function_in_JavaScript.jpg?w=1200&h=630);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 80vh;
+  
+}
+.cont{
+    padding: 80px;
+    gap: 30px;
+text-align: center;
+ background-color: rgba(0, 0, 0, 0.288);
+ 
+}
+.about{
+ background-image: url(https://read.learnyard.com/content/images/2024/07/logo.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 80vh;
+    
+}
+.cont2{
+ padding: 120px;
+ gap: 30px;
+ text-align: center;
+ color: rgb(255, 255, 255);
+ background-color: rgba(0, 0, 0, 0.247);
+}
+.services{
+background-image: url(https://api.hub.jhu.edu/factory/sites/default/files/styles/landscape/public/javascript.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 80vh;
+    
+}
+.cont3{
+ padding: 80px;
+ gap: 30px;
+ text-align: center;
+ color:  rgb(255, 209, 2);
+ background-color: rgba(0, 0, 0, 0.247);
+
+}
+.intro :hover{
+ transform: translateY(-5px);
+}
+.about :hover{
+transform: translateY(-5px);
+}
+.services :hover{
+transform: translateY(-5px);
+}
